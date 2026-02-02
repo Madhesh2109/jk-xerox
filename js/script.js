@@ -12,13 +12,19 @@ document.querySelectorAll('.nav a').forEach(link => {
 });
 
 // Modal logic
-const openBtn = document.getElementById("openFormBtn");
-const closeBtn = document.getElementById("closeFormBtn");
 const modal = document.getElementById("formModal");
+const closeBtn = document.getElementById("closeFormBtn");
 
-openBtn.addEventListener("click", () => {
-  modal.classList.add("active");
-  document.body.style.overflow = "hidden";
+// Open buttons (Hero + Contact)
+const openButtons = document.querySelectorAll(
+  "#openFormBtn, #openFormBtnContact"
+);
+
+openButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    modal.classList.add("active");
+    document.body.style.overflow = "hidden";
+  });
 });
 
 closeBtn.addEventListener("click", () => {
@@ -26,7 +32,7 @@ closeBtn.addEventListener("click", () => {
   document.body.style.overflow = "";
 });
 
-// Close modal when clicking outside content
+// Close modal on overlay click
 modal.addEventListener("click", e => {
   if (e.target === modal) {
     modal.classList.remove("active");
@@ -34,7 +40,7 @@ modal.addEventListener("click", e => {
   }
 });
 
-// Close modal with ESC key
+// ESC key close
 document.addEventListener("keydown", e => {
   if (e.key === "Escape" && modal.classList.contains("active")) {
     modal.classList.remove("active");
