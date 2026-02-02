@@ -1,5 +1,6 @@
 // Smooth scroll for nav links
-document.querySelectorAll('.nav a').forEach(link => {
+// Improved smooth scroll with easing
+document.querySelectorAll('.header-nav a').forEach(link => {
   link.addEventListener('click', e => {
     const targetId = link.getAttribute('href');
     const targetEl = document.querySelector(targetId);
@@ -7,9 +8,40 @@ document.querySelectorAll('.nav a').forEach(link => {
     if (!targetEl) return;
 
     e.preventDefault();
-    targetEl.scrollIntoView({ behavior: 'smooth' });
+
+    const headerOffset = 80; // height of sticky header
+    const elementPosition = targetEl.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+    smoothScrollTo(offsetPosition, 700); // duration in ms
   });
 });
+
+function smoothScrollTo(targetY, duration) {
+  const startY = window.pageYOffset;
+  const distance = targetY - startY;
+  let startTime = null;
+
+  function animation(currentTime) {
+    if (!startTime) startTime = currentTime;
+    const timeElapsed = currentTime - startTime;
+    const progress = Math.min(timeElapsed / duration, 1);
+
+    // easeInOutCubic
+    const ease =
+      progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+    window.scrollTo(0, startY + distance * ease);
+
+    if (timeElapsed < duration) {
+      requestAnimationFrame(animation);
+    }
+  }
+
+  requestAnimationFrame(animation);
+}
 
 // Modal logic
 const modal = document.getElementById("formModal");
